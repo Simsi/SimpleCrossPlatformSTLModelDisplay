@@ -1,4 +1,4 @@
-<img width="1920" height="1039" alt="image" src="https://github.com/user-attachments/assets/b512a311-a4b4-4c4b-a4d4-9ae407f2eaab" /># SimpleCrossPlatformSTLModelDisplay
+# SimpleCrossPlatformSTLModelDisplay
 Avalonia UI C# Project. 
 
 There is simple STL display in C# Avalonia UI app with some changable parameters for shaders. <br>
