@@ -1,0 +1,190 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:controls="clr-namespace:TestGPT5.Classes"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
+             x:Class="TestGPT5.Views.MainView">
+
+	<Grid ColumnDefinitions="220, Auto, *,320" RowDefinitions="Auto,*,Auto" Margin="8">
+
+		<!-- Верхняя панель -->
+		<StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" Spacing="8">
+			<Button Content="Открыть STL…" Click="OpenStl_Click"/>
+			<CheckBox Content="Wireframe" IsChecked="{Binding ElementName=Viewer, Path=Wireframe}"/>
+			<CheckBox Content="Перспектива" IsChecked="{Binding ElementName=Viewer, Path=IsPerspective}"/>
+		</StackPanel>
+
+		<!-- Левая колонка -->
+		<StackPanel Grid.Row="1" Grid.Column="0" Spacing="12">
+
+			<Border CornerRadius="8" Padding="8" Background="#FFFFFF">
+				<StackPanel Spacing="8">
+					<TextBlock Text="Примитивы" FontWeight="SemiBold"/>
+					<WrapPanel ItemWidth="96" ItemHeight="36">
+						<Button x:Name="BtnCube"     Content="Cube"     Tag="cube"     Margin="0,0,8,8"/>
+						<Button x:Name="BtnSphere"   Content="Sphere"   Tag="sphere"   Margin="0,0,8,8"/>
+						<Button x:Name="BtnCylinder" Content="Cylinder" Tag="cylinder" Margin="0,0,8,8"/>
+					</WrapPanel>
+					<TextBlock Text="Перетащи кнопку на сцену →" Opacity="0.7"/>
+				</StackPanel>
+			</Border>
+
+			<Expander Header="Материал и свет" IsExpanded="True">
+				<Border CornerRadius="8" Padding="8" Background="#FFFFFF">
+					<StackPanel Spacing="8">
+						<StackPanel Orientation="Horizontal" Spacing="8">
+							<CheckBox Content="Освещение" IsChecked="{Binding ElementName=Viewer, Path=LightingEnabled}"/>
+							<ComboBox Width="140" SelectedIndex="{Binding ElementName=Viewer, Path=Shading}">
+								<ComboBoxItem Content="Unlit"/>
+								<ComboBoxItem Content="Lambert"/>
+								<ComboBoxItem Content="Blinn-Phong"/>
+							</ComboBox>
+						</StackPanel>
+
+						<StackPanel Orientation="Horizontal" Spacing="12">
+							<CheckBox Content="Point light" IsChecked="{Binding ElementName=Viewer, Path=UsePointLight}"/>
+							<CheckBox Content="Backface culling" IsChecked="{Binding ElementName=Viewer, Path=BackfaceCulling}"/>
+							<CheckBox Content="Two-sided" IsChecked="{Binding ElementName=Viewer, Path=TwoSidedLighting}"/>
+						</StackPanel>
+
+						<Separator/>
+
+						<TextBlock Text="Материал" FontWeight="SemiBold"/>
+						<UniformGrid Columns="2" Rows="2" Margin="0,4,0,0">
+							<StackPanel Spacing="2">
+								<TextBlock Text="Ambient"/>
+								<Slider Minimum="0" Maximum="1" Value="{Binding ElementName=Viewer, Path=Ambient}" TickFrequency="0.01"/>
+								<TextBlock Text="{Binding ElementName=Viewer, Path=Ambient, StringFormat=F2}" Opacity="0.7"/>
+							</StackPanel>
+							<StackPanel Spacing="2">
+								<TextBlock Text="Diffuse"/>
+								<Slider Minimum="0" Maximum="1" Value="{Binding ElementName=Viewer, Path=Diffuse}" TickFrequency="0.01"/>
+								<TextBlock Text="{Binding ElementName=Viewer, Path=Diffuse, StringFormat=F2}" Opacity="0.7"/>
+							</StackPanel>
+							<StackPanel Spacing="2">
+								<TextBlock Text="Specular"/>
+								<Slider Minimum="0" Maximum="1" Value="{Binding ElementName=Viewer, Path=Specular}" TickFrequency="0.01"/>
+								<TextBlock Text="{Binding ElementName=Viewer, Path=Specular, StringFormat=F2}" Opacity="0.7"/>
+							</StackPanel>
+							<StackPanel Spacing="2">
+								<TextBlock Text="Shininess"/>
+								<Slider Minimum="1" Maximum="128" Value="{Binding ElementName=Viewer, Path=Shininess}" TickFrequency="1"/>
+								<TextBlock Text="{Binding ElementName=Viewer, Path=Shininess, StringFormat=F0}" Opacity="0.7"/>
+							</StackPanel>
+						</UniformGrid>
+
+						<Separator/>
+
+						<TextBlock Text="Свет" FontWeight="SemiBold"/>
+						<StackPanel Spacing="2">
+							<TextBlock Text="Yaw"/>
+							<Slider Minimum="-180" Maximum="180" Value="{Binding ElementName=Viewer, Path=LightYaw}"/>
+							<TextBlock Text="{Binding ElementName=Viewer, Path=LightYaw, StringFormat=F0°}" Opacity="0.7"/>
+						</StackPanel>
+						<StackPanel Spacing="2">
+							<TextBlock Text="Pitch"/>
+							<Slider Minimum="-89" Maximum="89" Value="{Binding ElementName=Viewer, Path=LightPitch}"/>
+							<TextBlock Text="{Binding ElementName=Viewer, Path=LightPitch, StringFormat=F0°}" Opacity="0.7"/>
+						</StackPanel>
+						<StackPanel Spacing="2">
+							<TextBlock Text="Distance (point)"/>
+							<Slider Minimum="0.1" Maximum="40" Value="{Binding ElementName=Viewer, Path=LightDistance}"/>
+							<TextBlock Text="{Binding ElementName=Viewer, Path=LightDistance, StringFormat=F1}" Opacity="0.7"/>
+						</StackPanel>
+						<StackPanel Spacing="2">
+							<TextBlock Text="Attenuation (point)"/>
+							<Slider Minimum="0" Maximum="0.2" TickFrequency="0.005" Value="{Binding ElementName=Viewer, Path=LightAttenuation}"/>
+							<TextBlock Text="{Binding ElementName=Viewer, Path=LightAttenuation, StringFormat=F3}" Opacity="0.7"/>
+						</StackPanel>
+					</StackPanel>
+				</Border>
+			</Expander>
+
+			<Border CornerRadius="8" Padding="8" Background="#FFFFFF">
+				<StackPanel Spacing="6">
+					<TextBlock Text="Навигация" FontWeight="SemiBold"/>
+					<TextBlock Text="Колесо мыши — зум" Opacity="0.7"/>
+					<TextBlock Text="Стрелки — поворот" Opacity="0.7"/>
+					<TextBlock Text="R — сброс вида" Opacity="0.7"/>
+				</StackPanel>
+			</Border>
+		</StackPanel>
+
+		<GridSplitter Grid.Row="1" Grid.Column="1"/>
+		<!-- Сцена -->
+		<controls:StlView3D x:Name="Viewer"
+							 Grid.Row="1" Grid.Column="2"
+							 SceneBackground="#101014"
+							 AutoScaleToFit="True"
+							 IsPerspective="True"
+							 Wireframe="False"
+							 LightingEnabled="True"
+							 Shading="2"
+							 UsePointLight="False"
+							 Ambient="0.15"
+							 Diffuse="0.85"
+							 Specular="0.25"
+							 Shininess="32"
+							 LightYaw="-45"
+							 LightPitch="-35"
+							 LightDistance="6"
+							 LightAttenuation="0.03" />
+
+		<!-- Правая колонка: отладка -->
+		<Border Grid.Row="1" Grid.Column="3" CornerRadius="8" Padding="10" Background="#121218">
+			<DockPanel LastChildFill="True">
+				<TextBlock DockPanel.Dock="Top" Text="Отладка сцены" FontWeight="SemiBold" Margin="0,0,0,8"/>
+
+				<ScrollViewer>
+					<StackPanel Spacing="12">
+
+						<Border Background="#FFFFFF" CornerRadius="8" Padding="8">
+							<StackPanel Spacing="6">
+								<TextBlock Text="Свет" FontWeight="SemiBold"/>
+								<TextBlock Text="{Binding ElementName=Viewer, Path=LightingEnabled, StringFormat=Enabled: {0}}"/>
+								<TextBlock Text="{Binding ElementName=Viewer, Path=Shading, StringFormat=Shading: {0}}"/>
+								<TextBlock Text="{Binding ElementName=Viewer, Path=UsePointLight, StringFormat=Point: {0}}"/>
+								<TextBlock Text="{Binding ElementName=Viewer, Path=LightYaw, StringFormat=Yaw: {0:F0}°}"/>
+								<TextBlock Text="{Binding ElementName=Viewer, Path=LightPitch, StringFormat=Pitch: {0:F0}°}"/>
+								<TextBlock Text="{Binding ElementName=Viewer, Path=LightDistance, StringFormat=Dist: {0:F1}}"/>
+								<TextBlock Text="{Binding ElementName=Viewer, Path=LightAttenuation, StringFormat=Atten: {0:F3}}"/>
+							</StackPanel>
+						</Border>
+
+						<Border Background="#FFFFFF" CornerRadius="8" Padding="8">
+							<StackPanel Spacing="6">
+								<TextBlock Text="Объекты" FontWeight="SemiBold"/>
+								<ItemsControl ItemsSource="{Binding ElementName=Viewer, Path=SceneObjects}">
+									<ItemsControl.ItemTemplate>
+										<DataTemplate>
+											<Border Background="#FFFFFF" CornerRadius="6" Padding="8" Margin="0,0,0,6">
+												<Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto">
+													<TextBlock Grid.ColumnSpan="2" Text="{Binding Name}" FontWeight="SemiBold"/>
+													<CheckBox Grid.Row="1" Content="Visible" IsChecked="{Binding Visible}"/>
+													<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TriangleCount, StringFormat=Triangles: {0}}"/>
+													<TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding Min, StringFormat=Bounds min: {0}}"/>
+													<TextBlock Grid.Row="3" Grid.ColumnSpan="2" Text="{Binding Max, StringFormat=Bounds max: {0}}"/>
+												</Grid>
+											</Border>
+										</DataTemplate>
+									</ItemsControl.ItemTemplate>
+								</ItemsControl>
+							</StackPanel>
+						</Border>
+
+					</StackPanel>
+				</ScrollViewer>
+			</DockPanel>
+		</Border>
+
+		<!-- Статус-бар -->
+		<Border Grid.Row="2" Grid.ColumnSpan="3" Background="#FFFFFF" Padding="6,4" CornerRadius="6">
+			<Grid ColumnDefinitions="*,*">
+				<TextBlock Text="{Binding ElementName=Viewer, Path=CursorInfo}"/>
+				<TextBlock Grid.Column="1" Text="{Binding ElementName=Viewer, Path=HoverInfo}" HorizontalAlignment="Right"/>
+			</Grid>
+		</Border>
+
+	</Grid>
+</UserControl>
